@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Stash</string>
+    <string name="share_label">Save to Stash</string>
+    <string name="widget_label">Stash quick capture</string>
+    <string name="widget_description">Jot a note, a list or a voice note in one tap</string>
+    <string name="tile_label">Stash note</string>
+    <string name="sc_note">New note</string>
+    <string name="sc_list">New checklist</string>
+    <string name="sc_voice">Voice note</string>
+</resources>

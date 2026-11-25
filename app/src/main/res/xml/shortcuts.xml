@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_sc_note"
+        android:shortcutId="note"
+        android:shortcutShortLabel="@string/sc_note">
+        <intent
+            android:action="com.maheshkatakam.stash.QUICK_NOTE"
+            android:targetClass="com.maheshkatakam.stash.CaptureActivity"
+            android:targetPackage="com.maheshkatakam.stash" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_sc_list"
+        android:shortcutId="list"
+        android:shortcutShortLabel="@string/sc_list">
+        <intent
+            android:action="com.maheshkatakam.stash.QUICK_LIST"
+            android:targetClass="com.maheshkatakam.stash.CaptureActivity"
+            android:targetPackage="com.maheshkatakam.stash" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_sc_voice"
+        android:shortcutId="voice"
+        android:shortcutShortLabel="@string/sc_voice">
+        <intent
+            android:action="com.maheshkatakam.stash.QUICK_VOICE"
+            android:targetClass="com.maheshkatakam.stash.CaptureActivity"
+            android:targetPackage="com.maheshkatakam.stash" />
+    </shortcut>
+</shortcuts>
