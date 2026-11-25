@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maheshkatakam.stash.data.ChecklistEntry
 import com.maheshkatakam.stash.data.ItemFull
+import com.maheshkatakam.stash.data.ItemKind
+import com.maheshkatakam.stash.data.isEmptyContent
 import com.maheshkatakam.stash.data.StashCollection
 import com.maheshkatakam.stash.data.StashRepository
 import com.maheshkatakam.stash.data.Tag
@@ -36,6 +38,13 @@ class EditorViewModel(private val repo: StashRepository, val itemId: Long) : Vie
     var missing by mutableStateOf(false)
         private set
 
+    /** The item existed and then disappeared (deleted elsewhere): the screen should close. */
+    var gone by mutableStateOf(false)
+        private set
+
+    /** A brand-new empty note opens with the keyboard ready. */
+    var autoFocusBody by mutableStateOf(false)
+
     /** The checklist entry that should take keyboard focus next (after Enter or "Add item"). */
     var focusEntryId by mutableStateOf<Long?>(null)
 
@@ -45,6 +54,12 @@ class EditorViewModel(private val repo: StashRepository, val itemId: Long) : Vie
 
     init {
         viewModelScope.launch {
+            var seen = false
+            item.collect { full ->
+                if (full != null) seen = true else if (seen) gone = true
+            }
+        }
+        viewModelScope.launch {
             val full = repo.getItem(itemId)
             if (full == null) {
                 missing = true
@@ -52,6 +67,13 @@ class EditorViewModel(private val repo: StashRepository, val itemId: Long) : Vie
                 title = full.item.title
                 body = full.item.body
                 loaded = true
+                if (full.isEmptyContent()) {
+                    when {
+                        full.entries.isNotEmpty() -> focusEntryId = full.entries.minByOrNull { it.position }?.id
+                        full.item.kind == ItemKind.NOTE -> autoFocusBody = true
+                        else -> Unit
+                    }
+                }
             }
         }
     }

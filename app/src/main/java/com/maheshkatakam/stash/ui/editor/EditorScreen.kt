@@ -204,18 +204,20 @@ fun EditorScreen(app: StashApp, itemId: Long, startRecording: Boolean, onBack: (
         }
     }
 
-    if (vm.missing) {
+    if (vm.missing || vm.gone) {
         LaunchedEffect(Unit) { onBack() }
         return
     }
-    val full = fullState
-    if (full == null) {
-        // Still loading, or the item was just deleted.
-        if (vm.loaded) LaunchedEffect(Unit) { onBack() }
-        return
-    }
+    val full = fullState ?: return
     val item = full.item
     val isList = full.isList
+    val bodyFocus = remember { FocusRequester() }
+    LaunchedEffect(vm.autoFocusBody) {
+        if (vm.autoFocusBody) {
+            runCatching { bodyFocus.requestFocus() }
+            vm.autoFocusBody = false
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -393,7 +395,7 @@ fun EditorScreen(app: StashApp, itemId: Long, startRecording: Boolean, onBack: (
                         onValueChange = vm::onBody,
                         placeholder = if (item.url != null || visuals.isNotEmpty()) "Add a note…" else "Note",
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 4.dp).heightIn(min = 48.dp),
+                        modifier = Modifier.padding(vertical = 4.dp).heightIn(min = 48.dp).focusRequester(bodyFocus),
                     )
                 }
 
